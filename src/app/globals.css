@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-comfortaa);
+  --font-mono: var(--font-geist-mono);
+
+  /* Custom Brand Colors */
+  --color-brand-dark: #050a18;
+  --color-brand-blue: #3b82f6;
+  --color-brand-purple: #8b5cf6;
+  --color-brand-cyan: #06b6d4;
+  --color-brand-gold: #fbbf24;
+}
+
+/* Dark Mode Overrides (Force Dark Mode for this design primarily) */
+:root {
+  --background: #050a18;
+  --foreground: #ffffff;
+}
+
+* html {
+  font-family: var(--font-sans);
+}
+
+/* Hide Scrollbar Globally */
+html,
+body {
+  scrollbar-width: none !important;
+  /* Firefox */
+  -ms-overflow-style: none !important;
+  /* IE and Edge */
+}
+
+::-webkit-scrollbar {
+  display: none !important;
+  width: 0px !important;
+  background: transparent !important;
+}
