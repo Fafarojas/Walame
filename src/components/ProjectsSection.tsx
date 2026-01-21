@@ -263,7 +263,7 @@ export function ProjectsSection() {
     }, []);
 
     return (
-        <section ref={triggerRef} className="relative bg-[#050a18] text-white">
+        <section ref={triggerRef} className="relative bg-[#050a18] text-white overflow-hidden">
             {/* Background Image Layer */}
             <div
                 className="absolute inset-0 bg-cover bg-center z-0 "
@@ -278,7 +278,7 @@ export function ProjectsSection() {
 
             <div
                 ref={containerRef}
-                className="h-[100svh] w-full overflow-hidden relative flex items-center justify-center [perspective:1000px] [transform-style:preserve-3d] z-10"
+                className="h-[100svh] w-full relative flex items-center justify-center [perspective:1000px] [transform-style:preserve-3d] z-10"
             >
                 {/* Fixed Title / Background Element */}
                 <div className="absolute top-25 w-full text-center z-20 pointer-events-none opacity-60 mix-blend-overlay">
@@ -288,7 +288,7 @@ export function ProjectsSection() {
                 {cases.map((project, index) => (
                     <div
                         key={project.id}
-                        className="project-card absolute w-[85vw] md:w-[600px] h-auto rounded-[10px] bg-white/5 border border-white/10 overflow-hidden will-change-transform shadow-2xl"
+                        className="project-card absolute w-[85vw] md:w-[600px] h-auto rounded-[10px] bg-white/5 border border-white/10 overflow-hidden will-change-transform shadow-2xl [backface-visibility:hidden]"
                     >
                         {/* Background Image */}
                         <img
@@ -300,7 +300,7 @@ export function ProjectsSection() {
                 ))}
 
                 {/* Final "You Could Be Next" Text Card */}
-                <div className="project-card absolute w-full md:w-auto h-auto flex items-center justify-center pointer-events-none will-change-transform z-20">
+                <div className="project-card absolute w-full md:w-auto h-auto flex items-center justify-center pointer-events-none will-change-transform z-20 [backface-visibility:hidden]">
                     <h2 className="text-4xl md:text-7xl font-black text-white text-center uppercase tracking-tighter drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
                         You Could<br />Be Next
                     </h2>
