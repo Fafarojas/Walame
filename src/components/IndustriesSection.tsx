@@ -119,14 +119,14 @@ export function IndustriesSection() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-end">
                         <div>
                             <h2 className="text-4xl md:text-6xl font-bold text-white mb-4 tracking-tight">
-                                Success <span className="text-white/40">Cases</span>
+                                Success Cases
                             </h2>
                             <p className="text-gray-400 text-sm md:text-base max-w-sm">
                                 Real results orchestrated by our intelligent agents across diverse industries.
                             </p>
                         </div>
-                        <div className="hidden md:flex justify-end text-white/20 text-sm font-mono items-center gap-4">
-                            SCROLL TO EXPLORE <span className="block w-12 h-[1px] bg-white/20"></span>
+                        <div className="hidden md:flex justify-end text-white/40 text-sm font-mono items-center gap-4">
+                            SCROLL TO EXPLORE <span className="block w-12 h-[1px] bg-white/40"></span>
                         </div>
                     </div>
                 </div>
