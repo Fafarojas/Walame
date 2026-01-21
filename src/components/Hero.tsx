@@ -10,7 +10,7 @@ export function Hero() {
         <section className="relative min-h-[100vh] flex flex-col items-center justify-end overflow-hidden bg-[#050a18] py-10">
             {/* Background Gradient - Top Dark to Bottom Light Blue/Cyan */}
             <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute inset-0 bg-cover bg-center bg-[url('/assets/hero-bg.png')]" />
+                <div className="absolute inset-0 bg-cover bg-center bg-[url('/assets/hero-bg.webp')]" />
             </div>
 
             {/* Geometric Center Graphic */}
