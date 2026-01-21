@@ -73,7 +73,7 @@ export function ProjectsSection() {
                     end: isDesktop ? "+=5000" : "+=4000", // Reduced mobile scroll length to prevent "overscroll" feel
                     scrub: 1,
                     pin: true,
-                    anticipatePin: 1,
+                    // anticipatePin: 0, // Removed to prevent "jump back" on mobile
                     invalidateOnRefresh: true, // Fix for mobile browser resizing (address bar)
                 }
             });
@@ -263,7 +263,7 @@ export function ProjectsSection() {
     }, []);
 
     return (
-        <section ref={triggerRef} className="relative bg-[#050a18] text-white overflow-hidden">
+        <section ref={triggerRef} className="relative bg-[#050a18] text-white overflow-hidden h-[100svh]">
             {/* Background Image Layer */}
             <div
                 className="absolute inset-0 bg-cover bg-center z-0 "
