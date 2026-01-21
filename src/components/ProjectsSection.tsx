@@ -8,51 +8,13 @@ import { ArrowUpRight } from "lucide-react";
 gsap.registerPlugin(ScrollTrigger);
 
 const cases = [
-    {
-        id: 1,
-        client: "LogiTech Solutions",
-        category: "Logistics",
-        description: "Predictive routing AI reduced delivery delays by 40%.",
-        result: "+40% Eff.",
-        year: "2024",
-        image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2070&auto=format&fit=crop",
-    },
-    {
-        id: 2,
-        client: "AgriFuture",
-        category: "Agriculture",
-        description: "Automated harvest scheduling increased yield predictability.",
-        result: "$2.5M Saved",
-        year: "2023",
-        image: "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=2070&auto=format&fit=crop",
-    },
-    {
-        id: 3,
-        client: "FinFlow Corp",
-        category: "Fintech",
-        description: "Streamlined document processing for loan approvals.",
-        result: "10x Faster",
-        year: "2024",
-        image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop",
-    },
-    {
-        id: 4,
-        client: "MediCare AI",
-        category: "Healthcare",
-        description: "Optimized patient scheduling across 15 regional hospitals.",
-        result: "98% Uptime",
-        year: "2023",
-        image: "https://images.unsplash.com/photo-1538108149393-fbbd81895907?q=80&w=2028&auto=format&fit=crop",
-    },
-    {
-        id: 5,
-        client: "RetailScale",
-        category: "E-Commerce",
-        description: "Dynamic pricing agents maximized Black Friday turnover.",
-        result: "+25% Rev.",
-        year: "2024",
-        image: "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?q=80&w=2070&auto=format&fit=crop",
-    },
+    { id: 1, image: "/assets/posts/1.jpg" },
+    { id: 2, image: "/assets/posts/2.jpg" },
+    { id: 3, image: "/assets/posts/3.jpg" },
+    { id: 4, image: "/assets/posts/4.jpg" },
+    { id: 5, image: "/assets/posts/5.jpg" },
+    { id: 6, image: "/assets/posts/6.jpg" },
+    { id: 7, image: "/assets/posts/7.jpg" },
 ];
 
 export function ProjectsSection() {
@@ -74,20 +36,21 @@ export function ProjectsSection() {
 
             // --- CONFIGURATION ---
             // DESKTOP: Overlapping, alternating sides
-            // MOBILE: Sequential, centered
+            // MOBILE: Sequential, centered (Strict non-overlapping)
 
-            const spacingZ = isDesktop ? 1200 : 1600;
+            const spacingZ = isDesktop ? 1200 : 1600; // Wide spacing for sequence
             const startZOffset = isDesktop ? 1000 : 800;
             const endBuffer = isDesktop ? 1000 : 500;
 
             // Recalculated Travel
-            const totalTravel = startZOffset + ((cases.length - 1) * spacingZ) + endBuffer;
+            const totalTravel = startZOffset + ((cards.length - 1) * spacingZ) + endBuffer;
 
             // --- INITIAL SETUP ---
             cards.forEach((card, i) => {
                 const isEven = i % 2 === 0;
-                // Desktop: Alternating | Mobile: Center
-                const initialX = isDesktop ? (isEven ? "-28vw" : "28vw") : 0;
+                const isLast = i === cards.length - 1;
+                // Desktop: Alternating | Mobile: Center. Last card (Text) is always centered.
+                const initialX = isLast ? 0 : (isDesktop ? (isEven ? "-28vw" : "28vw") : 0);
 
                 gsap.set(card, {
                     left: "50%",
@@ -107,16 +70,36 @@ export function ProjectsSection() {
                 scrollTrigger: {
                     trigger: triggerRef.current,
                     start: "top top",
-                    end: isDesktop ? "+=5000" : "+=6000", // More scroll for mobile to handle sequential length
+                    end: isDesktop ? "+=5000" : "+=4000", // Reduced mobile scroll length to prevent "overscroll" feel
                     scrub: 1,
                     pin: true,
-                    anticipatePin: 1
+                    anticipatePin: 1,
+                    invalidateOnRefresh: true, // Fix for mobile browser resizing (address bar)
                 }
             });
 
             // Master Movement
-            tl.to(cards, {
+            // We split movement: Image cards go effectively "through" the viewer (high Z)
+            // Text card stops at a readable distance (Z=0 or small positive) to avoid extreme zoom
+
+            const textCard = cards[cards.length - 1];
+            const imageCards = cards.slice(0, -1);
+
+            // Text card should stop around Z=0 (Screen plane) to be readable but not huge
+            // Current FinalZ = endBuffer. We want FinalZ = 0.
+            // So reduce travel by endBuffer.
+            const totalTravelText = totalTravel - endBuffer;
+
+            // Images Move Full Distance
+            tl.to(imageCards, {
                 z: `+=${totalTravel}`,
+                ease: "none",
+                duration: 1
+            }, 0);
+
+            // Text Moves Less Distance (Slower visual approach, stops earlier)
+            tl.to(textCard, {
+                z: `+=${totalTravelText}`,
                 ease: "none",
                 duration: 1
             }, 0);
@@ -124,21 +107,34 @@ export function ProjectsSection() {
             // Visibility Logic
             cards.forEach((card, i) => {
                 const initialZ = -startZOffset - (i * spacingZ);
+                const isLast = i === cards.length - 1;
+
+                // Use the correct travel distance for calculations
+                const currentTravel = isLast ? totalTravelText : totalTravel;
 
                 // --- FADE ZONES ---
                 // DESKTOP: Overlap allowed (-1500 start)
-                // MOBILE: Strict sequence. 
-                // Spacing 1600.
+                // MOBILE: Strict sequence. Spacing 1600.
                 // Out: 200 -> 800.
-                // In: -800 -> -200.
-                // When N is 800, N+1 is -800 (Start In). Perfect sequence.
+                // Next card starts In at -800 (when Prev is at 800).
 
-                const fadeInStart = isDesktop ? -1500 : -800;
-                const fadeInEnd = isDesktop ? -500 : -200;
+                // For the LAST card (Text), we want strict "appear after previous gone" behavior on ALL devices
+                // Previous card gone at: Z = 800
+                // Last card position at that moment: Z = 800 - spacingZ
+                // So start fade in EXACTLY at 800 - spacingZ
+
+                const standardFadeInStart = isDesktop ? -1500 : -800;
+                const standardFadeInEnd = isDesktop ? -500 : -200;
+
+                const fadeInStart = isLast ? (100 - spacingZ) : standardFadeInStart;
+                // Make text appear quicker (shorter fade) so it's readable before fading out
+                const fadeInEnd = isLast ? (fadeInStart + 1000) : standardFadeInEnd;
+
+                // Prevent text from getting too big: Fade it out earlier (at 500 instead of 800)
                 const fadeOutStart = 200;
-                const fadeOutEnd = 800;
+                const fadeOutEnd = isLast ? 500 : 800;
 
-                const getProgress = (z: number) => (z - initialZ) / totalTravel;
+                const getProgress = (z: number) => (z - initialZ) / currentTravel;
 
                 const pInStart = getProgress(fadeInStart);
                 const pInEnd = getProgress(fadeInEnd);
@@ -161,7 +157,7 @@ export function ProjectsSection() {
                 }
 
                 // 2. Fade Out
-                if (pOutStart < 1) {
+                if (!isLast && pOutStart < 1) {
                     const safeStart = Math.max(0, pOutStart);
                     const duration = Math.max(0.01, pOutEnd - safeStart);
 
@@ -282,65 +278,33 @@ export function ProjectsSection() {
 
             <div
                 ref={containerRef}
-                className="h-screen w-full overflow-hidden relative flex items-center justify-center [perspective:1000px] [transform-style:preserve-3d] z-10"
+                className="h-[100svh] w-full overflow-hidden relative flex items-center justify-center [perspective:1000px] [transform-style:preserve-3d] z-10"
             >
                 {/* Fixed Title / Background Element */}
-                <div className="absolute top-10 w-full text-center z-20 pointer-events-none opacity-30 mix-blend-overlay">
-                    <h2 className="text-xl font-mono uppercase tracking-[0.5em] text-white">Selected Projects</h2>
+                <div className="absolute top-25 w-full text-center z-20 pointer-events-none opacity-60 mix-blend-overlay">
+                    <h2 className="text-[15px] md:text-2xl font-mono uppercase tracking-[0.5em] text-white">Selected Projects</h2>
                 </div>
 
                 {cases.map((project, index) => (
                     <div
                         key={project.id}
-                        className="project-card absolute w-[80vw] md:w-[600px] h-[55vh] md:h-[500px] rounded-[10px] bg-white/5 border border-white/10 overflow-hidden will-change-transform shadow-2xl"
+                        className="project-card absolute w-[85vw] md:w-[600px] h-auto rounded-[10px] bg-white/5 border border-white/10 overflow-hidden will-change-transform shadow-2xl"
                     >
                         {/* Background Image */}
-                        <div
-                            className="absolute inset-0 bg-cover bg-center"
-                            style={{ backgroundImage: `url(${project.image})` }}
+                        <img
+                            src={project.image}
+                            alt={`Project ${project.id}`}
+                            className="w-full h-auto block"
                         />
-
-                        {/* Overlay Gradient */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-90" />
-
-                        {/* Card Content Overlay */}
-                        <div className="absolute inset-0 p-8 md:p-10 flex flex-col z-10">
-
-                            {/* Top: Tags */}
-                            <div className="flex justify-between items-start">
-                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[5px] border border-white/20 text-[10px] uppercase tracking-wider text-white font-medium bg-black/30 backdrop-blur-sm">
-                                    {project.category}
-                                </span>
-                                <span className="text-white/60 text-xs font-mono border border-white/10 px-2 py-1 rounded-[5px] bg-black/20">
-                                    {project.year}
-                                </span>
-                            </div>
-
-                            {/* Bottom Group: Title, Desc, Results */}
-                            <div className="mt-auto space-y-6">
-                                <div>
-                                    <h3 className="text-3xl md:text-4xl font-bold text-white leading-tight drop-shadow-lg">
-                                        {project.client}
-                                    </h3>
-                                    <p className="text-white/80 text-sm leading-relaxed mt-2 line-clamp-2 drop-shadow-md">
-                                        {project.description}
-                                    </p>
-                                </div>
-
-                                <div className="pt-6 border-t border-white/20 flex items-center justify-between">
-                                    <div>
-                                        <p className="text-white/60 text-[10px] uppercase tracking-wider mb-1">Impact</p>
-                                        <p className="text-2xl font-bold text-white tracking-tight">{project.result}</p>
-                                    </div>
-
-                                    <button className="w-12 h-12 rounded-[5px] border border-white/20 bg-white/10 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all duration-300 backdrop-blur-md">
-                                        <ArrowUpRight strokeWidth={1.5} className="w-5 h-5" />
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 ))}
+
+                {/* Final "You Could Be Next" Text Card */}
+                <div className="project-card absolute w-full md:w-auto h-auto flex items-center justify-center pointer-events-none will-change-transform z-20">
+                    <h2 className="text-4xl md:text-7xl font-black text-white text-center uppercase tracking-tighter drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+                        You Could<br />Be Next
+                    </h2>
+                </div>
             </div>
         </section>
     );
