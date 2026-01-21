@@ -100,7 +100,7 @@ export function OrchestrationSection() {
                 </div>
 
                 {/* Flex Expanding Grid */}
-                <div className="flex flex-col md:flex-row h-auto md:h-[600px] border border-gray-200 divide-y md:divide-y-0 md:divide-x divide-gray-200 bg-white">
+                <div className="flex flex-col md:flex-row h-auto md:h-[400px] 2xl:h-[600px] border border-gray-200 divide-y md:divide-y-0 md:divide-x divide-gray-200 bg-white">
 
                     {/* Column 1: Card 01 */}
                     <motion.div

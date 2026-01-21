@@ -5,12 +5,12 @@ import { Star, Twitter, Linkedin, Github, Disc } from "lucide-react";
 
 export function Footer() {
     return (
-        <footer className="bg-white relative overflow-hidden pt-12 pb-6">
+        <footer className="bg-white relative overflow-hidden pt-12 pb-6 ">
             <div className="mx-auto px-6 md:px-12 relative z-10 ">
                 <div className="flex flex-col lg:flex-row gap-4">
 
                     {/* Left Card - Blue Gradient */}
-                    <div className="w-full lg:w-[400px] bg-cover bg-center bg-[url('/assets/hero-bg.png')] rounded-[5px] p-10 flex flex-col justify-between text-white relative overflow-hidden min-h-[500px]">
+                    <div className="w-full lg:w-[400px] bg-cover bg-center bg-[url('/assets/hero-bg.png')] rounded-[5px] p-10 flex flex-col justify-between text-white relative overflow-hidden ">
                         <div>
                             <div className="flex items-center gap-2 mb-8">
                                 <span className="text-xl font-bold tracking-wide">Walame</span>
@@ -45,9 +45,9 @@ export function Footer() {
                             <div className="space-y-6">
                                 <h3 className="font-serif italic text-gray-400 text-lg">Navigation</h3>
                                 <ul className="space-y-4">
-                                    {["How it works", "Features", "Pricing", "Testimonials", "FAQ"].map((item) => (
+                                    {["Home", "About", "Services"].map((item) => (
                                         <li key={item}>
-                                            <Link href="#" className="text-white font-medium hover:text-blue-500 transition-colors">
+                                            <Link href="#" className="text-sm 2xl:text-[20px] text-white font-medium hover:text-blue-500 transition-colors">
                                                 {item}
                                             </Link>
                                         </li>
@@ -59,9 +59,23 @@ export function Footer() {
                             <div className="space-y-6">
                                 <h3 className="font-serif italic text-gray-400 text-lg">Company</h3>
                                 <ul className="space-y-4">
-                                    {["Blog", "About", "Contact Us", "Terms and Condition", "Privacy Policy"].map((item) => (
+                                    {["Contact Us", "Terms and Condition", "Privacy Policy"].map((item) => (
                                         <li key={item}>
-                                            <Link href="#" className="text-white font-medium hover:text-blue-500 transition-colors">
+                                            <Link href="#" className="text-sm 2xl:text-[20px] text-white font-medium hover:text-blue-500 transition-colors">
+                                                {item}
+                                            </Link>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+
+                            {/* Products */}
+                            <div className="space-y-6">
+                                <h3 className="font-serif italic text-gray-400 text-lg">Products</h3>
+                                <ul className="space-y-4">
+                                    {["Walame AI", "Walame Chat", "Walame CRM"].map((item) => (
+                                        <li key={item}>
+                                            <Link href="#" className="text-sm 2xl:text-[20px] text-white font-medium hover:text-blue-500 transition-colors">
                                                 {item}
                                             </Link>
                                         </li>
@@ -74,11 +88,13 @@ export function Footer() {
 
                         {/* Newsletter & Copyright */}
                         <div className="mt-auto relative z-10">
-                            <div className="max-w-md mb-12">
-                                <p className="text-gray-400 text-sm mb-1">AI moves fast.</p>
-                                <h4 className="text-2xl font-semibold text-white mb-6">Stay ahead with Walame</h4>
+                            <div className="flex flex-col md:flex-row justify-between items-center mb-12">
+                                <div>
+                                    <p className="text-gray-400 text-sm mb-1">AI moves fast.</p>
+                                    <h4 className="text-1xl 2xl:text-2xl font-semibold text-white mb-6">Stay ahead with Walame</h4>
+                                </div>
 
-                                <div className="flex flex-col md:flex-row gap-2">
+                                <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto">
                                     <input
                                         type="email"
                                         placeholder="Enter email address"
