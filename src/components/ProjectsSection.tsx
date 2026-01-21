@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowUpRight } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
+ScrollTrigger.config({ ignoreMobileResize: true });
 
 const cases = [
     { id: 1, image: "/assets/posts/1.jpg" },
@@ -22,6 +23,16 @@ export function ProjectsSection() {
     const triggerRef = useRef<HTMLDivElement>(null);
 
     useLayoutEffect(() => {
+        // "Verification" and stabilization for mobile scrolling
+        // normalizeScroll forces the scroll to be handled on the main thread, 
+        // preventing the address bar resize jump and "overshoot" on mobile.
+        ScrollTrigger.normalizeScroll({
+            allowNestedScroll: true,
+        });
+
+        // Force a refresh to ensure start positions are perfect before we begin
+        ScrollTrigger.refresh();
+
         let mm = gsap.matchMedia();
         const cards = gsap.utils.toArray<HTMLElement>(".project-card");
 
@@ -70,11 +81,16 @@ export function ProjectsSection() {
                 scrollTrigger: {
                     trigger: triggerRef.current,
                     start: "top top",
-                    end: isDesktop ? "+=5000" : "+=4000", // Reduced mobile scroll length to prevent "overscroll" feel
+                    end: isDesktop ? "+=5000" : "+=4000",
                     scrub: 1,
                     pin: true,
-                    // anticipatePin: 0, // Removed to prevent "jump back" on mobile
-                    invalidateOnRefresh: true, // Fix for mobile browser resizing (address bar)
+                    // anticipatePin: 0,
+                    invalidateOnRefresh: true,
+                    fastScrollEnd: true,
+                    preventOverlaps: true,
+                    // "Verification" triggers to ensure alignment
+                    onEnter: () => gsap.set(triggerRef.current, { clearProps: "transform" }), // Reset any drift
+                    onLeaveBack: () => gsap.set(triggerRef.current, { clearProps: "transform" }) // Reset on return
                 }
             });
 
