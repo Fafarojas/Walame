@@ -107,8 +107,7 @@ export function OrchestrationSection() {
                         ref={(el) => { cardsRef.current[0] = el }}
                         animate={{ flex: isMobile ? 1 : (isCol1Active ? 2 : 1) }}
                         className="flex flex-col h-[400px] md:h-auto transition-all duration-500 ease-in-out"
-                        onViewportEnter={!isMobile ? () => setActiveId("01.") : undefined}
-                        viewport={{ margin: "-30% 0px -30% 0px" }}
+
                     >
                         <InteractiveCard
                             card={cardsData[0]}
@@ -123,8 +122,7 @@ export function OrchestrationSection() {
                         ref={(el) => { cardsRef.current[1] = el }}
                         animate={{ flex: isMobile ? 1 : (isCol2Active ? 2 : 1) }}
                         className="flex flex-col h-[400px] md:h-auto transition-all duration-500 ease-in-out"
-                        onViewportEnter={!isMobile ? () => setActiveId("02.") : undefined}
-                        viewport={{ margin: "-30% 0px -30% 0px" }}
+
                     >
                         <InteractiveCard
                             card={cardsData[1]}
@@ -144,8 +142,7 @@ export function OrchestrationSection() {
                             ref={(el) => { cardsRef.current[2] = el }}
                             animate={{ flex: isMobile ? 1 : (activeId === "03." ? 2 : 1) }}
                             className="h-full relative flex flex-col transition-all duration-500 ease-in-out"
-                            onViewportEnter={!isMobile ? () => setActiveId("03.") : undefined}
-                            viewport={{ margin: "-30% 0px -30% 0px" }}
+
                         >
                             <InteractiveCard
                                 card={cardsData[2]}
@@ -160,8 +157,7 @@ export function OrchestrationSection() {
                             ref={(el) => { cardsRef.current[3] = el }}
                             animate={{ flex: isMobile ? 1 : (activeId === "04." ? 2 : 1) }}
                             className="h-full relative flex flex-col transition-all duration-500 ease-in-out"
-                            onViewportEnter={!isMobile ? () => setActiveId("04.") : undefined}
-                            viewport={{ margin: "-30% 0px -30% 0px" }}
+
                         >
                             <InteractiveCard
                                 card={cardsData[3]}
